@@ -15,7 +15,7 @@ PRIORITY_AREAS = [
 ]
 
 # Load dataset
-with open("refugee_support_data_weighted.json", "r") as f:
+with open("backend/refugee_support_data_weighted.json", "r") as f:
     data = json.load(f)
 
 # Prepare dataset
