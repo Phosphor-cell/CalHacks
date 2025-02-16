@@ -19,14 +19,16 @@
         questionIndex += 1;
         console.log(questionIndex)
         if (questionIndex >= questions.length) {
-            let results = [...document.querySelectorAll('span[role="dialog"]')].map(x=>(x as HTMLSpanElement).innerText)
+            let results = [...document.querySelectorAll('input')].map(x=>x.value)
             alert(results)
         }
+
+        document.querySelectorAll('input').item(questionIndex).focus()
+
+
+
+
         
-    }
-
-    function questionStyle() {
-
     }
 
 
@@ -38,7 +40,7 @@
 </header>
 <main>
     {#each questions as question, i}
-        <div class={`${questionIndex > i ? "grey" : ""}`} id={`q${i}`}>
+        <div class={`question ${questionIndex > i ? "show" : ""}`} id={`q${i}`}>
             <h2>{question}</h2>
             <input onkeydown={e => {
                 if (e.key == "Enter") {
@@ -58,5 +60,26 @@
         padding: 0.5em;
         border: none;
     }
+
+    button {
+        appearance: none;
+        border: none;
+        border-radius: 2em;
+        padding: 0.5em;
+    }
+
+    div.question {
+        opacity: 0.2;
+        transition: all 0.7s linear;
+
+        &.show {
+            opacity: 0.5;
+        }
+
+        &:focus-within {
+            opacity: 1;
+        }
+    }
+
 
 </style>
