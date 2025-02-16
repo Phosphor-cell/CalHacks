@@ -39,7 +39,7 @@
       {
         question: "Can permanent residents vote in Canadian elections?",
         choices: ["Yes, in all elections", "Only in local elections", "No, only Canadian citizens can vote", "Yes, but only after living in Canada for 5 years"],
-        correct: 3
+        correct: 2
       }
     ];
   
@@ -100,5 +100,8 @@
   </main>
   
 <style lang="css">
-    .question { margin-bottom: 20px; }
+    .question { 
+        margin-bottom: 20px; 
+        font-family: Arial, sans-serif;
+    }
 </style>
