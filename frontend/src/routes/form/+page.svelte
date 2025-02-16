@@ -5,19 +5,18 @@
     import {onMount, tick } from "svelte";
 
     let qna = [
-        'What are your main concerns regarding living in Canada?',
-        'Have you had access to services who are offering support to immigrants (e.g. english classes, support for financial, employment, or living needs)? If so, how helpful have they been?', 
-        'Do you plan on being a Canadian Citizen? If so, have you applied for, or are eligible for Canadian Citizenship yet?', 
-        'What is your current employment status?', 
-        'Have you applied, or own a Work Permit?',
-        'Do you have access to financial services such as a bank?', 
-        'How fluent are you in English or French, even if it is not your first language?', 
-        'Are you currently enrolled in a language class right now? If so how helpful have they been for you?',
-        'What kind of housing unit do you live in right now (e.g. apartment, house, etc.)?',
-        'Do you feel safe with your current living conditions?',
-        'How affordable are you finding your current housing situation?',
-        'Do you have good access to healthcare services?', 
-        'Have you applied for any form of insurance?'
+        "What is your current financial situation?",
+        "How stable is your housing situation?",
+        "What is your employment status?",
+        "Do you have recognized credentials for your field in Canada?",
+        "How is your legal status in Canada?",
+        "Do you have access to healthcare and mental health support?",
+        "How well do you speak English/French?",
+        "Do you have a support network in Canada? ",
+        "How much do you know about your rights and laws in Canada?",
+        "How confident are you in navigating daily life in Canada? ",
+        "Which country are you originally from?",
+        "What is your first name (This would help us to help you in further steps!)?",
     ];
 
     let user_inp;
