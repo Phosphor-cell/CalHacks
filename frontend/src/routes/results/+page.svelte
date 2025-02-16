@@ -2,6 +2,7 @@
     import type { PageData } from './$types';
 
     let { data }: { data: PageData } = $props();
+    let headings = ["Lorem", "Ipsum"]
 
 </script>
 
@@ -11,21 +12,14 @@
 </header>
 
 <main>
-    {#each ["Lorem", "Ipsum"] as heading, i}
-        <div style={`animation-delay: ${i}s;`}>
-            <h2>{heading}</h2>
+    {#each headings as heading, i}
+        <div style={`animation-delay: ${i + 1}s;`}>
+            <h2>{heading[0].toUpperCase() + heading.slice(1)}</h2>
         </div>
     {/each}
 </main>
 
 <style lang="scss">
-    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
-    :root {
-        background-color: rgb(35, 35, 35);
-        color: white;
-        font-family: "EB Garamond", serif;
-        text-align: center;
-    }
 
     header {
         width: 100%;
@@ -36,11 +30,7 @@
 
     h1 {
         font-size: 3em;
-        transition: all 1s linear;
-
-        &:hover {
-            color: transparent;
-        }
+        animation: fadeIn 1s linear forwards;
     }
 
     main {
@@ -50,6 +40,11 @@
         div {
             opacity: 0%;
             animation: fadeIn 1s linear forwards;
+            text-shadow:
+                -1px -1px 0 var(--background),
+                1px -1px 0 var(--background),
+                -1px 1px 0 var(--background),
+                1px 1px 0 var(--background); 
         }
     }
 
