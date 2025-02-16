@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+/*import fs from "fs/promises";
 import path from "path";
 
 const filePath = path.resolve("static/data.json");
@@ -21,4 +21,4 @@ export async function POST({ request }){
             headers: { "Content=Type" : "application/json"}
         });
     }
-}
+}*/

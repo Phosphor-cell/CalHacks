@@ -16,11 +16,13 @@
     let answers = [];
     let i = 0;
     let completed = false;
+    let responseAI="";
 
     onMount(()=>{
-        user_inp?.focus();
+        document.querySelector('input')?.focus();
     });
-    async function jsonfy() {
+    async function jsonfy(event) {
+        event.preventDefault();
         if (user_inp.trim() !== "") {
             answers.push(user_inp);
         } else {
@@ -31,14 +33,51 @@
         if (i < qna.length - 1) {
             i++;
             await tick();
-            user_inp?.focus();
+            document.querySelector('input')?.focus();
         } else {
             jsonify = {responses: answers};
             completed = true;
+            await callCohere(jsonify);
         }
     }
 
+    async function callCohere(jsondata){
+        try {
+            const response = await fetch("https://api.cohere.ai/v1/chat", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer <API>", // 🔴 Replace with your actual API key
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "command-r7b-12-2024",
+                    message: `Here are responses, give me support resources helping me be independent: ${JSON.stringify(jsondata)}.`,
+                    max_tokens: 200,
+                    temperature: 0.5
+                })
+            });
+            const data = await response.json();
+            responseAI = data.text;
+            console.log("Cohere API Response:", data); // ✅ Log full response
+
+
+
+            if (data.error) {
+                console.error("Cohere API Error:", data.error);
+                responseAI = `Cohere API Error: ${data.error.message}`;
+            } else if (data.text && data.text.length > 0) {
+                responseAI = data.text;
+            } else {
+                console.error("Error: No generations returned from Cohere");
+                responseAI = "Cohere did not return any data.";
+            }
+        } catch (error) {
+            console.error("Network or Fetch Error:", error);
+            responseAI = "A network error occurred. Please try again.";
+        }
+    }
 </script>
+
 
 <main>
     {#if !completed}
@@ -49,5 +88,14 @@
         </form>
     {:else }
         <p>{JSON.stringify(jsonify, null, 2)}</p>
+        <pre class="respond">{responseAI}</pre>
     {/if}
 </main>
+
+<style lang="css">
+    .respond {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-width: 600px;
+    }
+</style>
