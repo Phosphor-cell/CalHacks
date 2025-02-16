@@ -1,10 +1,5 @@
-<script>
-    import {text} from "@sveltejs/kit";
-    import {read} from "$app/server";
-    import {compile} from "svelte/compiler";
-    import {onMount, tick } from "svelte";
-
-    let qna = [
+<script lang="ts">
+    const questions = [
         "What is your current financial situation?",
         "How stable is your housing situation?",
         "What is your employment status?",
@@ -18,92 +13,50 @@
         "Which country are you originally from?",
         "What is your first name (This would help us to help you in further steps!)?",
     ];
-
-    let user_inp;
-    let jsonify = {};
-    let answers = [];
-    let i = 0;
-    let completed = false;
-    let responseAI="";
-
-    onMount(()=>{
-        document.querySelector('input')?.focus();
-    });
-    async function jsonfy(event) {
-        event.preventDefault();
-        if (user_inp.trim() !== "") {
-            answers.push(user_inp);
-        } else {
-            answers.push("0");
+    let questionIndex = $state(0)
+    let answers = []
+    function nextQuestion() {
+        questionIndex += 1;
+        console.log(questionIndex)
+        if (questionIndex >= questions.length) {
+            let results = [...document.querySelectorAll('span[role="dialog"]')].map(x=>(x as HTMLSpanElement).innerText)
+            alert(results)
         }
-        user_inp = "";
-
-        if (i < qna.length - 1) {
-            i++;
-            await tick();
-            document.querySelector('input')?.focus();
-        } else {
-            jsonify = {responses: answers};
-            completed = true;
-            await callCohere(jsonify);
-        }
+        
     }
 
-    async function callCohere(jsondata){
-        try {
-            const response = await fetch("https://api.cohere.ai/v1/chat", {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer <API>", // 🔴 Replace with your actual API key
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    model: "command-r7b-12-2024",
-                    message: `Here are responses, give me support resources helping me be independent: ${JSON.stringify(jsondata)}.`,
-                    max_tokens: 200,
-                    temperature: 0.5
-                })
-            });
-            const data = await response.json();
-            responseAI = data.text;
-            console.log("Cohere API Response:", data); // ✅ Log full response
+    function questionStyle() {
 
-
-
-            if (data.error) {
-                console.error("Cohere API Error:", data.error);
-                responseAI = `Cohere API Error: ${data.error.message}`;
-            } else if (data.text && data.text.length > 0) {
-                responseAI = data.text;
-            } else {
-                console.error("Error: No generations returned from Cohere");
-                responseAI = "Cohere did not return any data.";
-            }
-        } catch (error) {
-            console.error("Network or Fetch Error:", error);
-            responseAI = "A network error occurred. Please try again.";
-        }
     }
+
+
 </script>
 
 
+<header>
+    <h1>Just getting some info...</h1>
+</header>
 <main>
-    {#if !completed}
-        <form>
-            <label class="questions">{qna[i]}</label>
-            <input type="text" bind:value={user_inp}/>
-            <button on:click={jsonfy}>Next</button>
-        </form>
-    {:else }
-        <p>{JSON.stringify(jsonify, null, 2)}</p>
-        <pre class="respond">{responseAI}</pre>
-    {/if}
+    {#each questions as question, i}
+        <div class={`${questionIndex > i ? "grey" : ""}`} id={`q${i}`}>
+            <h2>{question}</h2>
+            <input onkeydown={e => {
+                if (e.key == "Enter") {
+                    nextQuestion()
+                }
+            }} type="text"/>
+            <button onclick={() => {nextQuestion()}}>Next</button>
+        </div>
+    {/each}
 </main>
 
-<style lang="css">
-    .respond {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        max-width: 600px;
+<style lang="scss">
+    input {
+        border-radius: 10em;
+        background-color: #313131;
+        color: grey;
+        padding: 0.5em;
+        border: none;
     }
+
 </style>
